@@ -29,10 +29,10 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 class Users(db.Model):
-    __tablename__ = 'url_shortner'
+    __tablename__ = 'users_table'
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(120), unique=True, nullable=False)
-    hash = db.Column(db.String(120), unique=True, nullable=False)
+    hash = db.Column(db.String(120), nullable=False)
  
     def __init__(self, login, hash):
         self.login = login
@@ -63,13 +63,15 @@ def get_userdata():
             print("Wrong passwordRepite")
 
     
-   
-
         ## Create taable and save long login and hash
-        # new_user = Users(login=login, hash=hashPassword)
-        # db.session.add(new_user)
-        # db.session.commit()
+        new_user = Users(login=login, hash=hashPassword)
+        db.session.add(new_user)
+        db.session.commit()
+
+
+        Users.query.all()
+        user = Users.query.filter_by(id=10).first()
+        print("user", user)
    
 
-
-    return (f"Welcome!{login}")
+    return (f"Welcome {user}!")
