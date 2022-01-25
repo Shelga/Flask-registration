@@ -50,11 +50,6 @@ class Users(db.Model):
 
 db.create_all()
 
-@app.route('/why_am_i', methods = ["POST"])
-def index():
-    if 'login' in session:
-        return (f'You are {session["login"]}')
-    return('Need to log in')
 
 @app.route('/registration', methods = ["POST"])
 def get_userdata():
@@ -81,14 +76,6 @@ def get_userdata():
         print("new_user", new_user)
         db.session.commit()
 
-
-        # Users.query.all()
-        # user = Users.query.filter_by(id=10).first()
-        # print("user", user)
-        # s = 20
-        # result = os.urandom(s).hex() 
-        # print(result)
-   
         if new_user:
             return (f"Welcome {login}!")
 
@@ -96,19 +83,19 @@ def get_userdata():
 @app.route('/login', methods = ["POST"])
 def get_login():
 
+    session.clear()
+
     if request.method == "POST":
         session['login'] = request.form['login']
 
         login = request.form.get("login")
         password = request.form.get("password")
-        # hash = 
 
         if not login:
             print("You must provide a login")
         elif not password:
             print("You must provide a password")
-
-        
+ 
         Users.query.all()
         check_user = Users.query.filter_by(login = login).first()
         print("check_user", check_user)
@@ -131,3 +118,10 @@ def get_login():
 def logout():
     session.pop('login', None)
     return ("you are logged out")
+
+@app.route('/why_am_i', methods = ["POST"])
+def get_login():
+    if 'login' in session:
+        login = session['login']
+        return (f'You are {session["login"]}')
+    return('Welcome Anonymous')
